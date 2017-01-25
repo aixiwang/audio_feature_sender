@@ -19,6 +19,15 @@ from edge_methods.feature_engineer import FeatureEngineer
 from edge_methods.majority_voter import MajorityVoter
 import Queue
 
+# http://www.dataivy.cn/blog/%E6%B7%B7%E5%90%88%E9%AB%98%E6%96%AF%E6%A8%A1%E5%9E%8Bgaussian-mixture-model_gmm/
+import numpy as np
+from sklearn import mixture
+
+model = mixture.GMM(n_components=2)
+#model.fit(features2)
+#model.predict(current_feature)
+
+
 myqueue = Queue.Queue(maxsize = 1024)
 
 CHUNK = 1024
