@@ -3,7 +3,7 @@
 # import pandas as pd
 import numpy as np
 import time
-from librosa.feature import zero_crossing_rate, mfcc, spectral_centroid, spectral_rolloff, spectral_bandwidth
+from librosa.feature import zero_crossing_rate, mfcc, spectral_centroid, spectral_rolloff, spectral_bandwidth, rmse
 # chroma_cens, rmse
 
 __all__ = [
@@ -100,23 +100,26 @@ class FeatureEngineer:
         #print 'frame_length:',frame_length
         
         #zcr_feat = zero_crossing_rate(y=audio_data, hop_length=frame_length)
-        zcr_feat = zero_crossing_rate(y=audio_data,frame_length=frame_length, hop_length=hop_length,center=False)
+        zcr_feat = zero_crossing_rate(y=audio_data,frame_length=frame_length,hop_length=hop_length)
         # rmse_feat = rmse(y=audio_data, hop_length=self.FRAME)
         #mfcc_feat = mfcc(y=audio_data, sr=sample_rate, n_mfcc=13)
-        mfcc_feat = mfcc(y=audio_data, sr=sample_rate, n_mfcc=13)
+        mfcc_feat = mfcc(y=audio_data, sr=sample_rate,hop_length=hop_length, n_mfcc=13, fmax=sample_rate/2,n_fft=frame_length)
         
         #spectral_centroid_feat = spectral_centroid(y=audio_data, sr=sample_rate, hop_length=hop_length)       
         #spectral_rolloff_feat = spectral_rolloff(y=audio_data,sr=sample_rate,hop_length=hop_length,roll_percent=0.90)
         #spectral_bandwidth_feat = spectral_bandwidth(y=audio_data,sr=sample_rate,hop_length=hop_length)
         # chroma_cens_feat = chroma_cens(y=audio_data, sr=self.RATE, hop_length=self.FRAME)
-
+        rmse_feat= rmse(y=audio_data,n_fft=frame_length,hop_length=hop_length)
+        
         feat = [zcr_feat,
+                rmse_feat,
               # rmse_feat,
               mfcc_feat,
               #spectral_centroid_feat,
               #spectral_rolloff_feat,
               # chroma_cens_feat
-              #spectral_bandwidth_feat
+              #spectral_bandwidth_feat,
+              
             ]
 
         return feat
