@@ -18,7 +18,6 @@ from edge_methods.event_predictor import EventPredictor
 from edge_methods.feature_engineer import FeatureEngineer
 from edge_methods.majority_voter import MajorityVoter
 import Queue
-import signallib
 
 myqueue = Queue.Queue(maxsize = 1024)
 
