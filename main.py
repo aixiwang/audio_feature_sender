@@ -23,9 +23,15 @@ import Queue
 import numpy as np
 from sklearn import mixture
 
+from sklearn.externals import joblib
+
+
 model = mixture.GMM(n_components=2)
 #model.fit(features2)
 #model.predict(current_feature)
+#joblib.dump(model,'gmm.model')
+#model2=joblib.load('gmm.model')
+
 
 
 myqueue = Queue.Queue(maxsize = 1024)
