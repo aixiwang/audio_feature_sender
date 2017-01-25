@@ -18,9 +18,9 @@ from edge_methods.event_predictor import EventPredictor
 from edge_methods.feature_engineer import FeatureEngineer
 from edge_methods.majority_voter import MajorityVoter
 import Queue
+import signallib
 
 myqueue = Queue.Queue(maxsize = 1024)
-
 
 CHUNK = 1024
 FORMAT = pyaudio.paInt16
@@ -42,6 +42,14 @@ def writefile2(filename,content):
     f.close()
     return 
     
+    
+#-------------------
+# key_word_predict
+#-------------------
+def key_word_predict(feat):
+    print feat
+    pass
+    
 #-------------------
 # sender_thread
 #-------------------
@@ -50,27 +58,29 @@ def sender_thread(p1):
     print 'sender_thread started!',p1
     
     f = file('fea.csv','ab')
-        
+    
+    word_status = 0        
     while True:
         feature_list = myqueue.get()
 
         #print '--------------------------------------'
-        #print type(feature_list)
+        #print feature_list
         
         feature_list2 = [feature_list[0][0][0],
                          feature_list[1][0][0],
-                         feature_list[1][1][0],
-                         feature_list[1][2][0],
-                         feature_list[1][3][0],
-                         feature_list[1][4][0],
-                         feature_list[1][5][0],
-                         feature_list[1][6][0],
-                         feature_list[1][7][0],
-                         feature_list[1][8][0],
-                         feature_list[1][9][0],
-                         feature_list[1][10][0],
-                         feature_list[1][11][0],
-                         feature_list[1][12][0]]
+                         feature_list[2][0][0],
+                         feature_list[2][1][0],
+                         feature_list[2][2][0],
+                         feature_list[2][3][0],
+                         feature_list[2][4][0],
+                         feature_list[2][5][0],
+                         feature_list[2][6][0],
+                         feature_list[2][7][0],
+                         feature_list[2][8][0],
+                         feature_list[2][9][0],
+                         feature_list[2][10][0],
+                         feature_list[2][11][0],
+                         feature_list[2][12][0]]
 
         #json_out = {'smd_id':SMD_ID,'msg_id':MSG_ID,'data':list(feature_list)}
         #json_out_str = json.dumps(json_out)
@@ -82,9 +92,21 @@ def sender_thread(p1):
             s += str(d) + ','
             
         s = s.rstrip(',') + '\r\n'
-        print s
+        #print s
         f.write(s)
-  
+        
+
+        if feature_list2[1] > 0.01 and word_status == 0:
+            print 'start of talk'
+            word_status = 1
+        
+        if feature_list2[1] < 0.01 and word_status == 1:
+            print 'end of talk'
+            word_status = 0
+        
+        if word_status == 1:
+            key_word_predict(feature_list2)
+            
 #------------------------------------------
 # main
 #------------------------------------------
@@ -113,8 +135,11 @@ if __name__ == '__main__':
             audio_data_raw = audio_data_raw/32768.0
             #print type(audio_data_raw)
             #print 'audio_data_raw:',audio_data_raw
-            feature_list = engineer.feature_engineer_frame(RATE,CHUNK,CHUNK,audio_data_raw)
-            myqueue.put(feature_list)
+            #feature_list1 = signallib.mfcc(audio_data_raw)
+            #print 'feature_list1:',feature_list1
+            feature_list2 = engineer.feature_engineer_frame(RATE,CHUNK,CHUNK,audio_data_raw)
+            #print 'feature_list2:',feature_list2
+            myqueue.put(feature_list2)
             
             # Todo -> 
             # 1. put feature to queue
