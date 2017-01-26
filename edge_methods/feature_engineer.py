@@ -105,9 +105,9 @@ class FeatureEngineer:
         #mfcc_feat = mfcc(y=audio_data, sr=sample_rate, n_mfcc=13)
         mfcc_feat = mfcc(y=audio_data, sr=sample_rate,hop_length=hop_length, n_mfcc=13, fmax=sample_rate/2,n_fft=frame_length)
         
-        #spectral_centroid_feat = spectral_centroid(y=audio_data, sr=sample_rate, hop_length=hop_length)       
-        #spectral_rolloff_feat = spectral_rolloff(y=audio_data,sr=sample_rate,hop_length=hop_length,roll_percent=0.90)
-        #spectral_bandwidth_feat = spectral_bandwidth(y=audio_data,sr=sample_rate,hop_length=hop_length)
+        spectral_centroid_feat = spectral_centroid(y=audio_data, sr=sample_rate, hop_length=hop_length)       
+        spectral_rolloff_feat = spectral_rolloff(y=audio_data,sr=sample_rate,hop_length=hop_length,roll_percent=0.90)
+        spectral_bandwidth_feat = spectral_bandwidth(y=audio_data,sr=sample_rate,hop_length=hop_length)
         # chroma_cens_feat = chroma_cens(y=audio_data, sr=self.RATE, hop_length=self.FRAME)
         rmse_feat= rmse(y=audio_data,n_fft=frame_length,hop_length=hop_length)
         
@@ -115,11 +115,10 @@ class FeatureEngineer:
                 rmse_feat,
               # rmse_feat,
               mfcc_feat,
-              #spectral_centroid_feat,
-              #spectral_rolloff_feat,
+              spectral_centroid_feat,
+              spectral_rolloff_feat,
               # chroma_cens_feat
-              #spectral_bandwidth_feat,
-              
+              spectral_bandwidth_feat,
             ]
 
         return feat
